@@ -59,7 +59,6 @@
   },
   "filters": [
     "update",
-    "area",
     "location",
     "division",
     "country",
