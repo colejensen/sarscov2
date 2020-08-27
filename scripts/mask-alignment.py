@@ -28,7 +28,7 @@ if __name__ == '__main__':
     if args.mask_from_end:
         end_length = args.mask_from_end
 
-    with open(args.output, 'w') as outfile:
+    with open(args.output, 'w', encoding='utf-8') as outfile:
         for record in Bio.SeqIO.parse(args.alignment, 'fasta'):
             seq = str(record.seq)
             start = "N" * begin_length

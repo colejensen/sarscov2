@@ -50,7 +50,7 @@ if __name__ == '__main__':
         pass
 
     # extract coordinates from TSV file
-    scheme_list = open(geoscheme, "r").readlines()[1:]
+    scheme_list = open(geoscheme, "r", encoding='utf-8').readlines()[1:]
     dont_search = []
     set_countries = []
     for line in scheme_list:

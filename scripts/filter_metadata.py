@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 
     # nextstrain metadata
-    dfN = pd.read_csv(metadata1, encoding='utf-8', sep='\t', dtype='str')
+    dfN = pd.read_csv(metadata1, encoding='utf-8', sep='\t')
     try:
         dfN = dfN[['strain', 'gisaid_epi_isl', 'genbank_accession', 'date', 'country', 'division', 'location',
                       'region_exposure', 'country_exposure', 'division_exposure', 'originating_lab', 'submitting_lab',
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     outputDF.to_csv(output1, sep='\t', index=False)
 
     # write renaming file
-    with open(output2, 'w') as outfile2:
+    with open(output2, 'w', encoding= 'utf-8') as outfile2:
         # export new metadata lines
         for id, header in dHeaders.items():
             outfile2.write(id + '\t' + header + '\n')

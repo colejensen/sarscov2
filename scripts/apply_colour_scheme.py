@@ -221,7 +221,7 @@ if __name__ == '__main__':
     # xml = BS(open(geoscheme, "r").read(), 'xml')
     # levels = xml.find('levels')
 
-    scheme_list = open(geoscheme, "r").readlines()[1:]
+    scheme_list = open(geoscheme, "r", encoding="utf-8").readlines()[1:]
     sampled_region = [key for dict_ in ordered_regions.values() for key in dict_]
     geodata = {}
 
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     ''' IMPORT COLOUR SCHEME '''
 
     print('\nGenerating colour scheme...\n')
-    html = BS(open(grid, "r").read(), 'html.parser')
+    html = BS(open(grid, "r", encoding="utf-8").read(), 'html.parser')
     tables = html.find_all('table')
 
     # for colour_name in colour_scale.keys():

@@ -10,7 +10,7 @@ from uszipcode import SearchEngine
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Reformat metadata file by adding column with subcontinental regions based on the UN geo-scheme",
-        formatter_class=argparse.ArgumentaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument("--metadata", required=True, help="Nextstrain metadata file")
     parser.add_argument("--geoscheme", required=True, help="XML file with geographic classifications")
@@ -25,8 +25,7 @@ if __name__ == '__main__':
     # geoscheme = path + "geoscheme.tsv"
     # output = path + 'metadata_geo.tsv'
 
-    focus = ['USA', 'Canada', 'United Kingdom', 'Maine', 'New Hampshire',
-             'Massachusetts', 'Connecticut', 'Vermont', 'New York']
+    focus = ['USA', 'Canada', 'United Kingdom', 'Connecticut', 'New York']
 
     # get ISO alpha3 country codes
     isos = {}
@@ -45,7 +44,7 @@ if __name__ == '__main__':
         return isos[country]
 
     # parse subcontinental regions in geoscheme
-    scheme_list = open(geoscheme, "r").readlines()[1:]
+    scheme_list = open(geoscheme, "r", encoding= 'utf-8').readlines()[1:]
     geoLevels = {}
     c = 0
     for line in scheme_list:
@@ -77,32 +76,49 @@ if __name__ == '__main__':
     dfN = pd.read_csv(metadata, encoding='utf-8', sep='\t')
     try:
         dfN.insert(4, 'region', '')
-        dfN.insert(8, 'area', '')
+        dfN.insert(8, 'exodus', '')
     except:
         pass
     dfN['region'] = dfN['iso'].map(geoLevels) # add 'column' region in metadata
 
+#    def add_area(division):
+#        area = ['Connecticut', 'Maine', 'Massachusetts', 'New Hampshire', 'Rhode Island', 'Vermont']
+#        if division in area:
+#            return 'New England'
+#        else:
+#            return 'Other areas'
 
-    # add column 'area' in metadata
-    def add_area(division):
-        area = ['New York']
-        if division in area:
-            return 'New York'
+#    dfN['area'] = dfN['division'].map(add_area) # add column 'area' in metadata
+    def add_exodus(region):
+        americas = ['North America', 'South America', 'Central America']
+        if region in americas:
+            return 'Americas'
         else:
-            return 'Other US areas'
+            return 'Other Countries'
+    dfN['exodus'] = dfN['region'].map(add_exodus) # add column 'exodus' in metadata and fill column with either 'Americas' or 'Other Countires'
 
-    dfN['area'] = dfN['division'].map(add_area)
 
-    def is_international(country):
-        if not country.startswith('USA'):
+    def is_usa(country):
+        usa = ['USA', 'USA-Midwest', 'USA-Northeast', 'USA-West', 'USA-South', 'USA-East', 'USA-North']
+        if country in usa:
             return 'yes'
         else:
             return 'no'
+    dfN['USA'] = dfN['country'].map(is_usa)
+    dfN.loc[dfN['USA'] == 'yes', 'exodus'] = 'USA'  # assign NYC as 'USA' in exodus column for US genomes
 
-    dfN['from_abroad'] = dfN['country'].map(is_international)
-    dfN.loc[dfN['from_abroad'] == 'yes', 'area'] = 'International' # assign non-US genomes as 'International'
+    def is_nyc(location):
+        exodus = ['New York City', 'Bronx', 'Brooklyn', 'Queens', 'Manhattan', 'Staten Island']
+        if location in exodus:
+            return 'yes'
+        else:
+            return 'no'
+    dfN['NYC'] = dfN['location'].map(is_nyc)
+    dfN.loc[dfN['NYC'] == 'yes', 'country'] = 'New York City' # assign NYC as 'New York City' in exodus column for genomes from NYC
 
-    dfN = dfN.drop(['from_abroad'], axis=1)
+
+    dfN = dfN.drop(['NYC'], axis=1) # drop the NYC column
+
 
     notfound = []
     # convert sets of locations into sub-locations
