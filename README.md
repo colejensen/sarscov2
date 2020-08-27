@@ -99,6 +99,8 @@ A few lines in the scripts `add_newgenomes.py` ans `filter_metadata.py` need to 
 Lines to be changed in `add_newgenomes.py`:
 - Lines 45, 56 and 81: **"Yale-"** must match the unique identifier, only found in your lab's genome IDs. Ours is set (in bold) as follows: hCoV-19/USA/**CT-Yale-001**/2020
 
+Lines to be changed in 'apply_geoscheme.py':
+- Lines 154 - 161 uses a function to make data from NYC be presented as it's own country. If you want NYC to be included in the USA at the country level you need to remove or comment out this function.
 
 Lines to be changed in `filter_metadata.py`:
 - Line 77: `sheet_name` must be changed to match the sheet tab name (without spaces), inside the Excel file
