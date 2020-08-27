@@ -76,7 +76,6 @@ if __name__ == '__main__':
     dfN = pd.read_csv(metadata, encoding='utf-8', sep='\t')
     try:
         dfN.insert(4, 'region', '')
-        dfN.insert(8, 'exodus', '')
     except:
         pass
     dfN['region'] = dfN['iso'].map(geoLevels) # add 'column' region in metadata
@@ -89,32 +88,16 @@ if __name__ == '__main__':
 #            return 'Other areas'
 
 #    dfN['area'] = dfN['division'].map(add_area) # add column 'area' in metadata
-    def add_exodus(region):
-        americas = ['North America', 'South America', 'Central America']
-        if region in americas:
-            return 'Americas'
-        else:
-            return 'Other Countries'
-    dfN['exodus'] = dfN['region'].map(add_exodus) # add column 'exodus' in metadata and fill column with either 'Americas' or 'Other Countires'
 
-
-    def is_usa(country):
-        usa = ['USA', 'USA-Midwest', 'USA-Northeast', 'USA-West', 'USA-South', 'USA-East', 'USA-North']
-        if country in usa:
-            return 'yes'
-        else:
-            return 'no'
-    dfN['USA'] = dfN['country'].map(is_usa)
-    dfN.loc[dfN['USA'] == 'yes', 'exodus'] = 'USA'  # assign NYC as 'USA' in exodus column for US genomes
-
-    def is_nyc(location):
+def is_nyc(location):
         exodus = ['New York City', 'Bronx', 'Brooklyn', 'Queens', 'Manhattan', 'Staten Island']
         if location in exodus:
             return 'yes'
         else:
             return 'no'
     dfN['NYC'] = dfN['location'].map(is_nyc)
-    dfN.loc[dfN['NYC'] == 'yes', 'country'] = 'New York City' # assign NYC as 'New York City' in exodus column for genomes from NYC
+    dfN.loc[dfN['NYC'] == 'yes', 'country'] = 'New York City' # assign NYC as 'New York City' in country column for genomes from NYC
+    # if this is specific to my project. Change/comment it out if you don't want NYC to look like it's own country. 
 
 
     dfN = dfN.drop(['NYC'], axis=1) # drop the NYC column
