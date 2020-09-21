@@ -20,11 +20,11 @@ except ImportError:
 import requests
 from Bio import Phylo
 
-path = 'C:/Users/28Cha/GLab Dropbox/Cole Jensen/internship/sarscov2'
+path = 'C:/Users/User/patway to file folder'
 # treeFile = 'aligned.tree'
 # bstree = Phylo.read(path + treeFile, 'newick')
 
-nx_tree = json.load(open(path + '/auspice/sarscov2_subsample1.json','r'))
+nx_tree = json.load(open(path + 'file.json','r'))
 
 tree = nx_tree['tree'] # tree data
 meta = nx_tree['meta'] # metadata
